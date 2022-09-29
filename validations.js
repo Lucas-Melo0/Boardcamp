@@ -6,6 +6,15 @@ const categoriesSchema = Joi.object({
   name: Joi.string().required(),
 });
 
-const validateCategories = validator(categoriesSchema);
+const gamesSchema = Joi.object({
+  name: Joi.string().required(),
+  image: Joi.string().required(),
+  stockTotal: Joi.number().min(1).required(),
+  categoryId: Joi.number().required(),
+  pricePerDay: Joi.number().min(1).required(),
+});
 
-export { validateCategories };
+const validateCategories = validator(categoriesSchema);
+const validateGames = validator(gamesSchema);
+
+export { validateCategories, validateGames };
