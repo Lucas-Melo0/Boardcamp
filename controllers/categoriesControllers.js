@@ -10,4 +10,15 @@ const categoriesGetter = async (req, res) => {
   }
 };
 
-export { categoriesGetter };
+const categoriesSender = async (req, res) => {
+  try {
+    const { name } = req.body;
+    connection.query("INSERT INTO categories (name) VALUES ($1);", [name]);
+    res.sendStatus(201);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
+export { categoriesGetter, categoriesSender };
