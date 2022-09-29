@@ -1,15 +1,10 @@
 import express from "express";
-import dotenv from "dotenv";
-import pgk from "pg";
+import categoriesRouter from "./routes/categoriesRoutes.js";
 
-const { Pool } = pgk;
 const server = express();
-dotenv.config();
-server.use(express.json());
 
-const connection = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+server.use(express.json());
+server.use(categoriesRouter);
 
 server.listen(4000, () => {
   console.log("listen on 4000");
