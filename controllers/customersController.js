@@ -18,4 +18,15 @@ const customersGetter = async (req, res) => {
   }
 };
 
-export { customersGetter };
+const customerGetterById = async (req, res) => {
+  try {
+    const { costumer } = res.locals;
+    res.send(costumer);
+  } catch (error) {
+    console.log(error);
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
+export { customersGetter, customerGetterById };
