@@ -21,8 +21,15 @@ const customerSchema = Joi.object({
   birthday: Joi.date().required(),
 });
 
+const rentalsSchema = Joi.object({
+  customerId: Joi.number().required(),
+  gameId: Joi.number().required(),
+  daysRented: Joi.number().min(1).required(),
+});
+
 const validateCategories = validator(categoriesSchema);
 const validateGames = validator(gamesSchema);
 const validateCustomer = validator(customerSchema);
+const validateRentals = validator(rentalsSchema);
 
-export { validateCategories, validateGames, validateCustomer };
+export { validateCategories, validateGames, validateCustomer, validateRentals };
