@@ -44,4 +44,20 @@ const deleteValidator = async (req, res, next) => {
   next();
 };
 
-export { rentalsValidator, deleteValidator };
+const rentalReturnValidator = async (req, res, next) => {
+  const { id } = req.params;
+  const rental = (
+    await connection.query("SELECT * FROM rentals WHERE id = $1;", [id])
+  ).rows;
+
+  const isValidRental = rental.find((value) => value.id == id);
+  const isRentalFinished = rental.find((value) => value.returnDate !== null);
+
+  if (!isValidRental) return res.sendStatus(404);
+  if (isRentalFinished) return res.sendStatus(400);
+
+  res.locals.rental = isValidRental;
+  next();
+};
+
+export { rentalsValidator, deleteValidator, rentalReturnValidator };

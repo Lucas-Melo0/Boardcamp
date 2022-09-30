@@ -32,7 +32,7 @@ const rentalsAdd = async (req, res) => {
 const rentalsDelete = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedRentals = await connection.query(
+    const deletedRental = await connection.query(
       "DELETE FROM rentals WHERE id = $1;",
       [id]
     );
@@ -43,4 +43,30 @@ const rentalsDelete = async (req, res) => {
   }
 };
 
-export { rentalsAdd, rentalsDelete };
+const rentalReturn = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rental } = res.locals;
+    const returnDate = new Date().toLocaleDateString("pt-BR");
+    const oneDay = 1000 * 60 * 60 * 24;
+    const delay = new Date() - rental.rentDate;
+    const daysDelayed = Math.ceil(delay / oneDay);
+    let delayFee = null;
+    if (delay > oneDay * rental.daysRented) {
+      delayFee = daysDelayed * rental.pricePerDay;
+    }
+
+    const newRental = { ...rental, returnDate, delayFee };
+    const rentalReturnal = await connection.query(
+      'UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3;',
+      [returnDate, delayFee, id]
+    );
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
+export { rentalsAdd, rentalsDelete, rentalReturn };
