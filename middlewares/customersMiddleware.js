@@ -26,10 +26,27 @@ const customerValidation = async (req, res, next) => {
     await connection.query("SELECT * FROM customers WHERE name = $1;", [name])
   ).rows;
 
-  const isDuplicate = customers.find((value) => value.name === name);
-  if (isDuplicate) return res.sendStatus(409);
+  const isNameDuplicate = customers.find((value) => value.name === name);
+  if (isNameDuplicate) return res.sendStatus(409);
 
   next();
 };
+const customerUpdateValidation = async (req, res, next) => {
+  const { error } = validateCustomer(req.body);
+  if (error) return res.sendStatus(400);
 
-export { existingCustomerValidation, customerValidation };
+  const { cpf } = req.body;
+  const customers = (
+    await connection.query("SELECT * FROM customers WHERE cpf = $1;", [cpf])
+  ).rows;
+
+  /* const isCpfDuplicate = customers.find((customer) => customer.cpf === cpf);
+  if (isCpfDuplicate) return res.sendStatus(409); */
+  next();
+};
+
+export {
+  existingCustomerValidation,
+  customerValidation,
+  customerUpdateValidation,
+};

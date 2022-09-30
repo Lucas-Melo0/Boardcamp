@@ -43,4 +43,18 @@ const customerAdder = async (req, res) => {
   }
 };
 
-export { customersGetter, customerGetterById, customerAdder };
+const customerUpdater = async (req, res) => {
+  try {
+    const { name, phone, cpf, birthday } = req.body;
+    const customer = await connection.query(
+      "UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 WHERE cpf = $5;",
+      [name, phone, cpf, birthday, cpf]
+    );
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
+export { customersGetter, customerGetterById, customerAdder, customerUpdater };
