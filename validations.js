@@ -14,7 +14,15 @@ const gamesSchema = Joi.object({
   pricePerDay: Joi.number().min(1).required(),
 });
 
+const customerSchema = Joi.object({
+  name: Joi.string().required(),
+  phone: Joi.string().min(10).max(11).required(),
+  cpf: Joi.string().length(11).required(),
+  birthday: Joi.date().required(),
+});
+
 const validateCategories = validator(categoriesSchema);
 const validateGames = validator(gamesSchema);
+const validateCustomer = validator(customerSchema);
 
-export { validateCategories, validateGames };
+export { validateCategories, validateGames, validateCustomer };

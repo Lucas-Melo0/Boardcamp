@@ -1,4 +1,5 @@
 import { connection } from "../database/db.js";
+import { validateCustomer } from "../validations.js";
 
 const existingCustomerValidation = async (req, res, next) => {
   const { id } = req.params;
@@ -16,4 +17,19 @@ const existingCustomerValidation = async (req, res, next) => {
   next();
 };
 
-export { existingCustomerValidation };
+const customerValidation = async (req, res, next) => {
+  const { error } = validateCustomer(req.body);
+  const { name } = req.body;
+  if (error) return res.sendStatus(400);
+
+  const customers = (
+    await connection.query("SELECT * FROM customers WHERE name = $1;", [name])
+  ).rows;
+
+  const isDuplicate = customers.find((value) => value.name === name);
+  if (isDuplicate) return res.sendStatus(409);
+
+  next();
+};
+
+export { existingCustomerValidation, customerValidation };
