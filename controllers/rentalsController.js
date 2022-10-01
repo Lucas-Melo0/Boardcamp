@@ -83,6 +83,11 @@ const rentalGetter = async (req, res) => {
         )
       ).rows;
 
+      rentals.forEach(
+        (rental) =>
+          (rental.rentDate = rental.rentDate.toLocaleDateString("pt-BR"))
+      );
+
       return res.send(rentals);
     }
     if (gameId) {
@@ -96,6 +101,10 @@ const rentalGetter = async (req, res) => {
           [gameId]
         )
       ).rows;
+      rentals.forEach(
+        (rental) =>
+          (rental.rentDate = rental.rentDate.toLocaleDateString("pt-BR"))
+      );
 
       return res.send(rentals);
     }
@@ -110,6 +119,10 @@ const rentalGetter = async (req, res) => {
       )
     ).rows;
 
+    rentals.forEach(
+      (rental) =>
+        (rental.rentDate = rental.rentDate.toLocaleDateString("pt-BR"))
+    );
     res.send(rentals);
   } catch (error) {
     console.log(error);
