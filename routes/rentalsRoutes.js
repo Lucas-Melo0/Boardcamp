@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  rentalGetter,
   rentalReturn,
   rentalsAdd,
   rentalsDelete,
@@ -13,6 +14,7 @@ import {
 const router = express.Router();
 
 router.post("/rentals", rentalsValidator, rentalsAdd);
+router.get("/rentals", rentalGetter);
 router.delete("/rentals/:id", deleteValidator, rentalsDelete);
 router.post("/rentals/:id/return", rentalReturnValidator, rentalReturn);
 
