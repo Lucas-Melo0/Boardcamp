@@ -45,10 +45,11 @@ const customerAdder = async (req, res) => {
 
 const customerUpdater = async (req, res) => {
   try {
+    const { id } = req.params;
     const { name, phone, cpf, birthday } = req.body;
     const customer = await connection.query(
-      "UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 WHERE cpf = $5;",
-      [name, phone, cpf, birthday, cpf]
+      "UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 WHERE id= $5;",
+      [name, phone, cpf, birthday, id]
     );
     res.sendStatus(200);
   } catch (error) {
