@@ -1,6 +1,7 @@
 import express from "express";
 import {
   rentalGetter,
+  rentalMetrics,
   rentalReturn,
   rentalsAdd,
   rentalsDelete,
@@ -17,5 +18,6 @@ router.post("/rentals", rentalsValidator, rentalsAdd);
 router.get("/rentals", rentalGetter);
 router.delete("/rentals/:id", deleteValidator, rentalsDelete);
 router.post("/rentals/:id/return", rentalReturnValidator, rentalReturn);
+router.get("/rentals/metrics", rentalMetrics);
 
 export default router;

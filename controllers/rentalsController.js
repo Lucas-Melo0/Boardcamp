@@ -51,7 +51,7 @@ const rentalReturn = async (req, res) => {
     const oneDay = 1000 * 60 * 60 * 24;
     const delay = new Date() - rental.rentDate;
     const daysDelayed = Math.ceil(delay / oneDay);
-    let delayFee = null;
+    let delayFee = 0;
     if (delay > oneDay * rental.daysRented) {
       delayFee = daysDelayed * rental.pricePerDay;
     }
@@ -130,4 +130,26 @@ const rentalGetter = async (req, res) => {
   }
 };
 
-export { rentalsAdd, rentalsDelete, rentalReturn, rentalGetter };
+const rentalMetrics = async (req, res) => {
+  try {
+    const metrics = (
+      await connection.query(
+        'SELECT SUM (("daysRented" * "originalPrice") + "delayFee") AS revenue, COUNT(id) AS rentals FROM rentals;'
+      )
+    ).rows;
+
+    const formattedMetrics = {
+      ...metrics[0],
+      revenue: Number(metrics[0].revenue),
+      rentals: Number(metrics[0].rentals),
+      average: Number((metrics[0].revenue / metrics[0].rentals).toFixed(2)),
+    };
+
+    res.send(formattedMetrics);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+};
+
+export { rentalsAdd, rentalsDelete, rentalReturn, rentalGetter, rentalMetrics };
