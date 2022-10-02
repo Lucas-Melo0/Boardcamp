@@ -2,8 +2,17 @@ import { connection } from "../database/db.js";
 
 const categoriesGetter = async (req, res) => {
   try {
-    const categories = await connection.query("SELECT * FROM categories;");
-    res.status(200).send(categories.rows);
+    const { order, desc } = req.query;
+
+    const categories = (
+      await connection.query(
+        `SELECT * FROM categories ORDER BY ${order ?? "id"} ${
+          desc ? "DESC" : ""
+        } ;`
+      )
+    ).rows;
+
+    return res.send(categories);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

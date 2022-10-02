@@ -2,16 +2,23 @@ import { connection } from "../database/db.js";
 
 const customersGetter = async (req, res) => {
   try {
-    const { cpf } = req.query;
+    const { cpf, order, desc } = req.query;
     if (cpf) {
-      const customers = await connection.query(
-        "SELECT * FROM customers WHERE cpf LIKE $1;",
-        ["%" + cpf + "%"]
-      );
-      return res.send(customers.rows);
+      const customers = (
+        await connection.query("SELECT * FROM customers WHERE cpf LIKE $1;", [
+          "%" + cpf + "%",
+        ])
+      ).rows;
+      return res.send(customers);
     }
-    const customers = await connection.query("SELECT * FROM customers");
-    res.send(customers.rows);
+    const customers = (
+      await connection.query(
+        `SELECT * FROM customers ORDER BY "${order ?? "id"}" ${
+          desc ? "DESC" : ""
+        };`
+      )
+    ).rows;
+    res.send(customers);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);

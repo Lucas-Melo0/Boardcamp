@@ -2,17 +2,24 @@ import { connection } from "../database/db.js";
 
 const gamesGetter = async (req, res) => {
   try {
-    const { name } = req.query;
+    const { name, order, desc } = req.query;
 
     if (name) {
-      const games = await connection.query(
-        "SELECT * FROM games WHERE name LIKE $1;",
-        ["%" + name + "%"]
-      );
-      return res.send(games.rows);
+      const games = (
+        await connection.query("SELECT * FROM games WHERE name ILIKE $1;", [
+          "%" + name + "%",
+        ])
+      ).rows;
+      return res.send(games);
     }
-    const games = await connection.query("SELECT * FROM games;");
-    res.send(games.rows);
+    const games = (
+      await connection.query(
+        `SELECT * FROM games ORDER BY "${order ?? "id"}" ${
+          desc ? "DESC" : ""
+        } ;`
+      )
+    ).rows;
+    res.send(games);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
