@@ -53,7 +53,7 @@ const rentalReturn = async (req, res) => {
     const daysDelayed = Math.ceil(delay / oneDay);
     let delayFee = 0;
     if (delay > oneDay * rental.daysRented) {
-      delayFee = daysDelayed * rental.pricePerDay;
+      delayFee = daysDelayed * rental.originalPrice;
     }
 
     const rentalReturnal = await connection.query(
