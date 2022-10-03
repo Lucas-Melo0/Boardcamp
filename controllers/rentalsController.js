@@ -69,7 +69,7 @@ const rentalReturn = async (req, res) => {
 };
 
 const rentalGetter = async (req, res) => {
-  const { customerId, gameId } = req.query;
+  const { customerId, gameId, status, startDate } = req.query;
   try {
     const rentals = (
       await connection.query(
@@ -79,7 +79,12 @@ const rentalGetter = async (req, res) => {
           JOIN games ON games.id = rentals."gameId"
           JOIN categories ON categories.id = games."categoryId" 
            ${customerId ? `WHERE customers.id= ${customerId}` : ""}
-           ${gameId ? `WHERE games.id= ${gameId}` : ""};`
+           ${gameId ? `WHERE games.id= ${gameId}` : ""}
+           ${status === "open" ? `WHERE rentals."returnDate" IS NULL` : ""}
+           ${
+             status === "closed" ? `WHERE rentals."returnDate" IS NOT NULL` : ""
+           }
+           ${startDate ? `WHERE rentals."rentDate" >= '${startDate}'` : ""};`
       )
     ).rows;
 

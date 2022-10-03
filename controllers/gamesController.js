@@ -29,9 +29,10 @@ const gamesGetter = async (req, res) => {
 const gamesSender = async (req, res) => {
   try {
     const { name, image, stockTotal, categoryId, pricePerDay } = req.body;
+    console.log(req.body);
     await connection.query(
       'INSERT INTO games (name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1,$2,$3,$4,$5);',
-      [name, image, stockTotal, categoryId, pricePerDay]
+      [name, image, stockTotal, categoryId, pricePerDay * 100]
     );
     res.sendStatus(201);
   } catch (error) {
