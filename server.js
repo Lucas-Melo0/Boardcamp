@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import categoriesRouter from "./routes/categoriesRoutes.js";
-import gamesRouter from "./routes/gamesRoutes.js";
-import costumerRouter from "./routes/customersRoutes.js";
-import rentalsRouter from "./routes/rentalsRoutes.js";
+import categoriesRouter from "./src/routes/categoriesRoutes.js";
+import gamesRouter from "./src/routes/gamesRoutes.js";
+import costumerRouter from "./src/routes/customersRoutes.js";
+import rentalsRouter from "./src/routes/rentalsRoutes.js";
 const server = express();
 
 server.use(cors());
