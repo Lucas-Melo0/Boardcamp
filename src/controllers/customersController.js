@@ -28,9 +28,9 @@ const customersGetter = async (req, res) => {
 const customerGetterById = async (req, res) => {
   try {
     const { costumer } = res.locals;
+    console.log(costumer);
     res.send(costumer);
   } catch (error) {
-    console.log(error);
     console.log(error);
     res.sendStatus(500);
   }

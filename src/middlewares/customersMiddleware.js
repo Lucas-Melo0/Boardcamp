@@ -8,7 +8,7 @@ const existingCustomerValidation = async (req, res, next) => {
     [id]
   );
 
-  const isValidId = customer.rows.find((value) => value.id === id);
+  const isValidId = customer.rows.find((value) => value.id == id);
   if (!isValidId) {
     return res.sendStatus(404);
   }
