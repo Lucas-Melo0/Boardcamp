@@ -71,51 +71,15 @@ const rentalReturn = async (req, res) => {
 const rentalGetter = async (req, res) => {
   const { customerId, gameId } = req.query;
   try {
-    if (customerId) {
-      const rentals = (
-        await connection.query(
-          `SELECT rentals.*,json_build_object('id', customers.id, 'name', customers.name) AS customer,
-          json_build_object('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game FROM rentals
-          JOIN customers ON customers.id = rentals."customerId"
-          JOIN games ON games.id = rentals."gameId"
-          JOIN categories ON categories.id = games."categoryId" WHERE customers.id = $1;`,
-          [customerId]
-        )
-      ).rows;
-
-      rentals.forEach(
-        (rental) =>
-          (rental.rentDate = rental.rentDate.toLocaleDateString("pt-BR"))
-      );
-
-      return res.send(rentals);
-    }
-    if (gameId) {
-      const rentals = (
-        await connection.query(
-          `SELECT rentals.*,json_build_object('id', customers.id, 'name', customers.name) AS customer,
-          json_build_object('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game FROM rentals
-          JOIN customers ON customers.id = rentals."customerId"
-          JOIN games ON games.id = rentals."gameId"
-          JOIN categories ON categories.id = games."categoryId" WHERE games.id = $1;`,
-          [gameId]
-        )
-      ).rows;
-      rentals.forEach(
-        (rental) =>
-          (rental.rentDate = rental.rentDate.toLocaleDateString("pt-BR"))
-      );
-
-      return res.send(rentals);
-    }
-
     const rentals = (
       await connection.query(
         `SELECT rentals.*,json_build_object('id', customers.id, 'name', customers.name) AS customer,
-        json_build_object('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game FROM rentals
-        JOIN customers ON customers.id = rentals."customerId"
-        JOIN games ON games.id = rentals."gameId"
-        JOIN categories ON categories.id = games."categoryId";`
+          json_build_object('id', games.id, 'name', games.name, 'categoryId', games."categoryId", 'categoryName', categories.name) AS game FROM rentals
+          JOIN customers ON customers.id = rentals."customerId"
+          JOIN games ON games.id = rentals."gameId"
+          JOIN categories ON categories.id = games."categoryId" 
+           ${customerId ? `WHERE customers.id= ${customerId}` : ""}
+           ${gameId ? `WHERE games.id= ${gameId}` : ""};`
       )
     ).rows;
 
@@ -123,7 +87,8 @@ const rentalGetter = async (req, res) => {
       (rental) =>
         (rental.rentDate = rental.rentDate.toLocaleDateString("pt-BR"))
     );
-    res.send(rentals);
+
+    return res.send(rentals);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
