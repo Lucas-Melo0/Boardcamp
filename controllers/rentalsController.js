@@ -102,9 +102,21 @@ const rentalGetter = async (req, res) => {
 
 const rentalMetrics = async (req, res) => {
   try {
+    const { startDate, endDate } = req.query;
     const metrics = (
       await connection.query(
-        'SELECT SUM (("daysRented" * "originalPrice") + "delayFee") AS revenue, COUNT(id) AS rentals FROM rentals;'
+        `SELECT SUM (("daysRented" * "originalPrice") + "delayFee")
+         AS revenue, COUNT(id) AS rentals FROM rentals 
+         ${
+           startDate && endDate
+             ? `WHERE rentals."rentDate" >= '${startDate}' AND rentals."rentDate" <= '${endDate}'`
+             : startDate
+             ? `WHERE rentals."rentDate" >= '${startDate}'`
+             : endDate
+             ? `WHERE rentals."rentDate" <= '${endDate}'`
+             : ""
+         }    
+      ;`
       )
     ).rows;
 
